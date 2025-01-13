@@ -54,7 +54,7 @@
 							<select id="category" name="category" required>
 								<option value="0" disabled selected>Selecione uma categoria</option>
 								<%for (int i = 0; i < categorias.size(); i++) { %>
-									<option value="<%=categorias.get(i).getIdCategory()%>"><%=categorias.get(i).getDescricao()%></option>
+									<option value="<%=String.valueOf(categorias.get(i).getIdCategory())%>"><%=categorias.get(i).getDescricao()%></option>
 								<%} %>
 							</select>
 						</td>
