@@ -2,6 +2,7 @@ package Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,7 +19,7 @@ import Model.Produto;
 /**
  * Servlet implementation class ServerletProduct
  */
-@WebServlet(urlPatterns = {"/ServerletProduct", "/search/Home/Cadproduct","/search/Home/insert"})
+@WebServlet(urlPatterns = {"/ServerletProduct", "/search/Home/Cadproduct","/search/Home/insert","/search/Home/UpProduct"})
 public class ServerletProduct extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -48,6 +49,8 @@ public class ServerletProduct extends HttpServlet {
 			cadastroProduto(request,response);
 		} else if (action.equals("/search/Home/insert")) { // Recebe a requisição enviada pelo forms de inserirProduto
 			inserirContato(request,response);
+		} else if (action.equals("/search/Home/UpProduct")) { 
+			listaDeContatosByUpdate(request,response);
 		}
 	}
 
@@ -73,11 +76,21 @@ public class ServerletProduct extends HttpServlet {
 		//Prepara o Objeto para Inserção
 		produto.setNome(request.getParameter("nome"));		
 		produto.setVp((Double.parseDouble(request.getParameter("vp"))));		
-		produto.setCodigo(request.getParameter("codigo"));		
-		produto.setCategoria(Integer.parseInt(request.getParameter("category")));		
-		
+		produto.setCodigo(request.getParameter("codigo"));				
+		produto.setCategoria(category_dao.selectCategoryById(Integer.parseInt(request.getParameter("category"))));	
+		produto.setDataCadastro(null);
+				
 		//Passa o objeto e as requisição para o método de inserir
 		product_dao.insertProduct(produto, request, response);
 		
+	}
+	
+	private void listaDeContatosByUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	    ArrayList<Produto> produtos = product_dao.selectAllProductJoinCategory();
+	    
+	    request.setAttribute("produtos", produtos);
+	    
+	    RequestDispatcher rd = request.getRequestDispatcher("/search/UpProduct/Products.jsp");
+	    rd.forward(request, response);    
 	}
 }

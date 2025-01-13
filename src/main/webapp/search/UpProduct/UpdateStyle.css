@@ -1,0 +1,53 @@
+@import
+	url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap')
+	;
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	height: 100vh; /* Body ocupando 100% da tela */
+	overflow: hidden;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+	font-weight: 400;
+	display: grid;
+	grid-template-rows: auto 1fr;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	border: 1px solid #ccc;
+	padding: 10px;
+	text-align: center;
+}
+
+th {
+	background-color: #f4f4f4;
+}
+
+caption {
+	font-size: 1.5em;
+	margin-bottom: 10px;
+	background-color: #c0c0c0;
+	padding: 20px;
+}
+
+.Botao1 {
+	text-decoration: none;
+	background-color: #66bbff;
+	padding: 5px 10px 5px 10px;
+	color: #fff;
+	font-size: 1.2em;
+	font-weight: 700;
+	border-radius: 5px;
+	border: 0;
+	cursor: pointer;
+}

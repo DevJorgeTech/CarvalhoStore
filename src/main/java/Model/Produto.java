@@ -1,5 +1,7 @@
 package Model;
 
+import java.sql.Date;
+
 public class Produto {
 	
 	private String idProduto;
@@ -10,19 +12,22 @@ public class Produto {
 	
 	private String codigo;
 	
-	private int categoria;
+	private Categoria categoria;
+	
+	private Date dataCadastro;
 	
 	public Produto() {
 		
 	}
 
-	public Produto(String idProduto, String nome, double vp, String codigo, int categoria) {
+	public Produto(String idProduto, String nome, double vp, String codigo, Categoria categoria,Date dataCadastro) {
 		super();
 		this.idProduto = idProduto;
 		this.nome = nome;
 		this.vp = vp;
 		this.codigo = codigo;
 		this.categoria = categoria;
+		this.dataCadastro = dataCadastro;
 	}
 
 	public String getIdProduto() {
@@ -57,11 +62,19 @@ public class Produto {
 		this.codigo = codigo;
 	}
 
-	public int getCategoria() {
+	public Categoria getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(int categoria) {
+	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
 	}	
 }
