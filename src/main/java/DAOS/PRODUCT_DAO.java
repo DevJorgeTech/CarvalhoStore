@@ -63,8 +63,10 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 	    ArrayList<Produto> produtos = new ArrayList<>();
 
 	    String sql = "SELECT a.idProdutos, a.nome, a.vp, b.idCategorias, b.descricao, a.codigo, a.dataCadastro " +
-	                 "FROM produtos a " +
-	                 "JOIN categorias b ON b.idCategorias = a.idCategoria";
+	             "FROM produtos a " +
+	             "JOIN categorias b ON b.idCategorias = a.idCategoria " +
+	             "ORDER BY a.idProdutos";
+
 
 	    try (Connection con = conectar();
 	         PreparedStatement pst = con.prepareStatement(sql);
@@ -91,7 +93,84 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 
 	    return produtos;
 	}
+	
+	public void selectProductById(Produto produto){
+						
+		String sql = "SELECT a.nome, a.vp, b.idCategorias, b.descricao, a.codigo, a.dataCadastro " +
+	             "FROM produtos a " +
+	             "JOIN categorias b ON b.idCategorias = a.idCategoria " +
+	             "WHERE IDPRODUTOS = ?";
 
+		
+		try {
+			Connection con = conectar();
+
+			PreparedStatement pst = con.prepareStatement(sql);
+			
+			pst.setString(1, produto.getIdProduto());
+
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				produto.setNome(rs.getString(1));          	            
+				produto.setVp(rs.getDouble(2));          	
+				
+				Categoria categoria = new Categoria(rs.getInt(3),rs.getString(4));
+
+				produto.setCategoria(categoria);          	            
+				produto.setCodigo(rs.getString(5));          	            
+				produto.setDataCadastro(rs.getDate(6));          	            
+			}
+
+			fecharConexao(con);
+
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+		
+	}
+	
+	public ArrayList<Produto> selectProductLike(String like) {
+		
+		ArrayList<Produto> produtos = new ArrayList<>();
+		
+		String sql = "SELECT a.idProdutos, a.nome, a.vp, b.idCategorias, b.descricao, a.codigo, a.dataCadastro  \r\n"
+		           + "FROM produtos a  \r\n"
+		           + "JOIN categorias b ON b.idCategorias = a.idCategoria  \r\n"
+		           + "WHERE lower(a.nome) LIKE lower(?)";
+		
+		try {
+			Connection con = conectar();
+			
+			PreparedStatement pst = con.prepareStatement(sql);
+			
+			pst.setString(1, "%" + like + "%");
+			
+			ResultSet rs = pst.executeQuery();
+			
+			
+			while(rs.next()) {
+				Categoria categoria = new Categoria(rs.getInt(4),rs.getString(5));
+				
+				produtos.add(new Produto(
+					    rs.getString(1),  // idProduto
+					    rs.getString(2),  // nome
+					    rs.getDouble(3),  // vp
+					    rs.getString(6),  // codigo
+					    categoria,        // categoria
+					    rs.getDate(7)     // dataCadastro
+				));
+			}
+			
+			return produtos;
+			
+		} catch (Exception e) {
+			e.getStackTrace();
+			
+			return null;
+		}
+
+	}
 
 	public void insertProduct(Produto produto, HttpServletRequest request, HttpServletResponse response) {
 		
@@ -113,57 +192,38 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 
 			fecharConexao(con);
 
-			enviaNotificaoSucesso(request, response);
+			enviaNotificaoSucesso(1, request, response);
 
 		} catch (Exception e) {
-			enviaNotificaoErro(produto, request, response, e);
+			enviaNotificaoErro(1, produto, request, response, e);
 		}
 	}
-
-	public void enviaNotificaoSucesso(HttpServletRequest request, HttpServletResponse response) {
-		String type = "Sucesso";
-	    String status = "Produto inserido com Sucesso!";
-	    
-	    //Aqui estamos usando o conceito de Session:
-	    // Os dados passados são armazenados de maneira temporaria e podem ser capturados enquanto estiver ativos 
-
-	    // Armazenando os dados na sessão
-	    request.getSession().setAttribute("type", type);
-	    request.getSession().setAttribute("status", status);
-
-		// Caso o insert tenha dado certo encaminha uma requisição ao ServLet no caminho abaixo
-		try {
-			response.sendRedirect("/CarvalhoStore/search/Home/Cadproduct");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	public void enviaNotificaoErro(Produto produto, HttpServletRequest request, HttpServletResponse response, Exception exception) {
-				
-		String type = "Erro";
+	
+	public void updateProduct(Produto produto, HttpServletRequest request, HttpServletResponse response) {
+		String sql = "UPDATE PRODUTOS " +
+	             	 "SET NOME = ?, VP = ?, IDCATEGORIA = ?, CODIGO = ? " +
+	             	 "WHERE IDPRODUTOS = ?";
 		
-		request.getSession().setAttribute("type", type);
-
-		if (exception instanceof SQLIntegrityConstraintViolationException) { // Código já existente
-		    String status = "Erro ao inserir produto código = " + produto.getCodigo() + " já cadastrado!";
-
-		    request.getSession().setAttribute("status", status);
-
-			// Essa requisição é capturada diretamente no arquivo CadProduct.jsp
-			try {
-				response.sendRedirect("/CarvalhoStore/search/Home/Cadproduct");
-
-				/*
-				 * Porque é enviada no caminho /search/Home/product, porque o ServerLet recebe
-				 * esse caminho e chama o método cadastroProduto que receberá todas as
-				 * categorias novamente e redicionará para o arquivo CadProduct.jsp
-				 */
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			exception.printStackTrace();
+		try {
+			Connection con = conectar();
+			
+			PreparedStatement pst = con.prepareStatement(sql);
+			
+			pst.setString(1, produto.getNome());
+			pst.setDouble(2, produto.getVp());
+			pst.setInt(3, produto.getCategoria().getIdCategory());
+			pst.setString(4, produto.getCodigo());
+			pst.setString(5, produto.getIdProduto());
+			
+			pst.executeUpdate();
+			
+			fecharConexao(con);
+			
+			enviaNotificaoSucesso(2, request, response);
+						
+		} catch (Exception e) {
+			enviaNotificaoErro(2, produto, request, response, e);
 		}
+
 	}
 }
