@@ -2,7 +2,6 @@ package Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,7 +18,14 @@ import Model.Produto;
 /**
  * Servlet implementation class ServerletProduct
  */
-@WebServlet(urlPatterns = {"/ServerletProduct", "/search/Home/Cadproduct","/search/Home/insert","/search/Home/UpProduct"})
+@WebServlet(urlPatterns = {"/ServerletProduct", 
+						   "/search/Home/Cadproduct",
+						   "/search/Home/insert",
+						   "/search/Home/ListProduct",
+						   "/search/Home/UpProduct",
+						   "/search/Home/update",
+						   "/search/Home/search"})
+
 public class ServerletProduct extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -48,9 +54,15 @@ public class ServerletProduct extends HttpServlet {
 		if (action.equals("/search/Home/Cadproduct")) {
 			cadastroProduto(request,response);
 		} else if (action.equals("/search/Home/insert")) { // Recebe a requisição enviada pelo forms de inserirProduto
-			inserirContato(request,response);
+			inserirProduto(request,response);
+		} else if (action.equals("/search/Home/ListProduct")) { 
+			listaDeProdutosByUpdate(request,response);
 		} else if (action.equals("/search/Home/UpProduct")) { 
-			listaDeContatosByUpdate(request,response);
+			produtoByUpdate(request,response);
+		} else if (action.equals("/search/Home/update")) { 
+			updateProduto(request,response);
+		} else if (action.equals("/search/Home/search")) { 
+			searchProductLike(request,response);
 		}
 	}
 
@@ -71,7 +83,7 @@ public class ServerletProduct extends HttpServlet {
 		rd.forward(request, response);		
 	}
 	
-	private void inserirContato(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void inserirProduto(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		//Prepara o Objeto para Inserção
 		produto.setNome(request.getParameter("nome"));		
@@ -85,12 +97,63 @@ public class ServerletProduct extends HttpServlet {
 		
 	}
 	
-	private void listaDeContatosByUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void listaDeProdutosByUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 	    ArrayList<Produto> produtos = product_dao.selectAllProductJoinCategory();
 	    
 	    request.setAttribute("produtos", produtos);
 	    
 	    RequestDispatcher rd = request.getRequestDispatcher("/search/UpProduct/Products.jsp");
 	    rd.forward(request, response);    
+	}
+	
+	private void produtoByUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		produto.setIdProduto(request.getParameter("idProduct"));
+		
+		product_dao.selectProductById(produto);
+		
+		request.setAttribute("productName", produto.getNome());
+		request.setAttribute("productVp", produto.getVp());
+		request.setAttribute("productCategory", produto.getCategoria());
+		request.setAttribute("productCodigo", produto.getCodigo());
+		
+		ArrayList<Categoria> categorias = category_dao.selectAllCategorysByDiferentThen(produto.getCategoria());
+
+		request.setAttribute("categorias", categorias);
+				
+		RequestDispatcher rd = request.getRequestDispatcher("/search/UpProduct/UpdateProduct.jsp");
+		
+		rd.forward(request, response);
+	}
+	
+	private void updateProduto(HttpServletRequest request, HttpServletResponse response) {
+		produto.setNome(request.getParameter("nome"));
+		produto.setVp(Double.parseDouble(request.getParameter("vp")));
+		produto.setCodigo(request.getParameter("codigo"));
+		produto.setCategoria(category_dao.selectCategoryById(Integer.parseInt(request.getParameter("category"))));	
+						
+		product_dao.updateProduct(produto, request, response);
+	}
+	
+	private void searchProductLike(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String like = request.getParameter("search");
+		
+		if (like.isEmpty()) {
+			ArrayList<Produto> produtos = product_dao.selectAllProductJoinCategory();
+			
+			request.setAttribute("produtos", produtos);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/search/UpProduct/Products.jsp");
+			
+			rd.forward(request, response);
+
+		} else {
+			ArrayList<Produto> produtos = product_dao.selectProductLike(like);
+			
+			request.setAttribute("produtos", produtos);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/search/UpProduct/Products.jsp");
+			
+			rd.forward(request, response);
+		}	
 	}
 }

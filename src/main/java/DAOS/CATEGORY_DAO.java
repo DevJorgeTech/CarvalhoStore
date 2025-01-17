@@ -78,4 +78,38 @@ public class CATEGORY_DAO extends GENERIC_DAO {
 			return null;
 		}
 	}
+	
+	public ArrayList<Categoria> selectAllCategorysByDiferentThen(Categoria categoria) {
+
+		ArrayList<Categoria> categorias = new ArrayList<>();
+
+		String sql = "SELECT * FROM CATEGORIAS WHERE IDCATEGORIAS != ?";
+
+		try {
+
+			Connection con = conectar();
+
+			PreparedStatement pst = con.prepareStatement(sql);
+			
+			pst.setInt(1, categoria.getIdCategory());
+
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				int idCategory = rs.getInt(1);
+				String descricao = rs.getString(2);
+
+				categorias.add(new Categoria(idCategory, descricao));
+			}
+
+			fecharConexao(con);
+
+			return categorias;
+
+		} catch (SQLException e) {
+			System.out.println(e);
+
+			return null;
+		}
+	}
 }

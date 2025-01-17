@@ -12,30 +12,29 @@
 	String type = (String) session.getAttribute("type");
 	
 	// Limpa os dados da sessão, com isso a URL se mantém limpa e o Toast, pode ser ativado
-    session.removeAttribute("status");
+	session.removeAttribute("status");
     session.removeAttribute("type");
     
-    //Limpar os dados da sessão evita que quando a página for recarregada o Toast fique ativando
-%>
-
+%>   
+    
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<title>CarvalhoStore</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="icon" type="image/png" href="/CarvalhoStore/Imagens/icon_carvalho.png">
-<link rel="stylesheet" href="/CarvalhoStore/search/CadProduct/Style.css">
-<title>CarvalhoStore</title>
+<link rel="stylesheet" href="/CarvalhoStore/search/UpProduct/UpdateStyle.css">
 </head>
 <body>
 	<div id="form-container">
-		<form name="frmCadProduct" action="insert" id="frmCadProduct">
-			<h1>Adicionar Produto</h1>
+		<form name="frmUpdateProduct" action="update?idProduct =<%out.print(request.getParameter("idProduct"));%>" id="frmUpdateProduct">
+			<h1>Alterar Produto</h1>
 				<table id="tabela">
 					<tr>
 						<td><input type="text" name="nome" required minlength="1" placeholder="Nome do Produto"
-							class="Caixa1"></td>
+							class="Caixa1" value="${productName}"></td>
 					</tr>
 					<tr>
 						<td><input type="text" name="vp" id="vp" 
@@ -43,16 +42,22 @@
 							pattern="[\d.,]*"  
 							onchange="formatarNumero(event)" 
 							placeholder="Valor Por Unidade"
-							class="Caixa2"></td>
+							class="Caixa2"
+							value="${productVp}"></td>
 					</tr>
 					<tr>
-						<td><input type="text" name="codigo" required minlength="1" placeholder="Código do Produto"
-							class="Caixa1"></td>
+						<td><input type="text" 
+							name="codigo" 
+							required minlength="1" 
+							placeholder="Código do Produto"
+							class="Caixa1"
+							value="${productCodigo}"></td>
 					</tr>
 					<tr>
 						<td>
 							<select id="category" name="category" required>
-								<option value="0" disabled selected>Selecione uma categoria</option>
+								<%Categoria category = (Categoria) request.getAttribute("productCategory");%>
+								<option value="<%=String.valueOf(categorias.get(0).getIdCategory())%>"><%=category.getDescricao() %></option>
 								<%for (int i = 0; i < categorias.size(); i++) { %>
 									<option value="<%=String.valueOf(categorias.get(i).getIdCategory())%>"><%=categorias.get(i).getDescricao()%></option>
 								<%} %>
@@ -62,8 +67,8 @@
 				</table>
 
 				<div id="button-container">
-					<input type="submit" value="Adicionar" class="Botao1"> <!-- Envia os dados do Forms para o ServerLet -->
-					<input type="reset" value="Cancelar" class="Botao1" onclick="cancelar()">
+					<input type="submit" value="Alterar" class="Botao1"> <!-- Envia os dados do Forms para o ServerLet -->
+					<input type="reset" value="Cancelar" class="Botao1">
 				</div>
 		</form>
 		
@@ -82,15 +87,15 @@
 				<p><%=status %></p>
 			</div>
 		</div>
-	</div>
+	</div> 
 	
-	<script src="/CarvalhoStore/search/CadProduct/validacaoCadProduct.js"></script>	
+	<script src="/CarvalhoStore/search/UpProduct/validacaoUpdate.js"></script>	
 	
 	<script type="text/javascript">
         var status = "<%= status != null ? status : "" %>";
         if (status) {
             mostrarNotificação();
         }
-    </script>	
+    </script> 
 </body>
 </html>
