@@ -1,12 +1,6 @@
-const form = document.getElementById("frmUpdateProduct");
+function configureFormValidation() {
 
-document.addEventListener('DOMContentLoaded', () => {
-	configureFormValidation(form.id);
-});
-
-function configureFormValidation(formId) {
-
-	const form = document.getElementById(formId);
+	const form = document.getElementById('frmUpdateProduct');
 
 	const category = document.getElementById("category")
 
@@ -33,48 +27,37 @@ function configureFormValidation(formId) {
 			// Impede o envio do formulário 
 			event.preventDefault();
 		} else {
-			document.forms["frmUpdateProduct"].submit();
+			submitFormsAndToast(form.id,event,'ListProduct');
 		}
 	});
 }
 
+configureFormValidation();
+
 function formatarNumero() { // Event onchange
-    let input = document.getElementById("vp");
-    let value = input.value.replace(/,/g, ".");
-    let isFirstPoint = false;
-    let isSegundPoint = false;
-    let novaStr = "";
+	let input = document.getElementById("vp");
+	let value = input.value.replace(/,/g, ".");
+	let isFirstPoint = false;
+	let isSegundPoint = false;
+	let novaStr = "";
 
-    for (let i = 0; i < value.length; i++) {
-        if (value[i] === ".") {
-            if (!isFirstPoint) { // Primeira interação === true, demais interações sempre false
-                isFirstPoint = true;
-                novaStr += value[i];
-            } else if (!isSegundPoint) { 
+	for (let i = 0; i < value.length; i++) {
+		if (value[i] === ".") {
+			if (!isFirstPoint) { // Primeira interação === true, demais interações sempre false
+				isFirstPoint = true;
+				novaStr += value[i];
+			} else if (!isSegundPoint) {
 				// Como o IF sempre será false após a primeira interação todos os demais pontos cairam aqui
-                isSegundPoint = true;
-            }
-        } else {
-            novaStr += value[i];
-        }
-    }
+				isSegundPoint = true;
+			}
+		} else {
+			novaStr += value[i];
+		}
+	}
 
-    input.value = novaStr; 
+	input.value = novaStr;
 }
 
-function mostrarNotificação() {
-	const toast = document.getElementById("wrapper_toast");
-	toast.style.display = "block";
-
-	setTimeout(() => {
-		toast.style.animation = "backOutDown 1s ease-in-out forwards";
-
-		toast.addEventListener("animationend", () => {
-			toast.style.display = "none";
-		});
-	}, 3000);
-}
-
-function voltarMenu(){
-	window.location.href = "/CarvalhoStore/search/Home/ListProduct"
+function voltarMenu(event) {
+	loadPageInConteinerMain(event, 'ListProduct');
 }

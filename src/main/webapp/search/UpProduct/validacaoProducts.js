@@ -1,58 +1,69 @@
-const inputSearch = document.getElementById("search");
-const formSearch = document.getElementById("formSearch");
-const button_search_cancel = document.getElementById("button-search-cancel")
+(function() {
+    const inputSearch = document.getElementById("search");
+    const formSearch = document.getElementById("formSearch");
+    const button_search_cancel = document.getElementById("button-search-cancel");
 
-document.addEventListener("DOMContentLoaded", function() {    
-    inputSearch.focus();
-    
-    // Coloca o cursor no final do texto
-    const textLength = inputSearch.value.length;
-    inputSearch.setSelectionRange(textLength, textLength); 
-});
+    // Captura o elemento <script> atualmente em execução no caso esse mesmo
+    let scriptTag = document.currentScript;
 
-let likeValue = '';
-let typingTimer;
-const doneTypingInterval = 500; 
+    scriptTag.addEventListener("load", function() {
+        inputSearch.focus();
 
-inputSearch.addEventListener("input", function(event) {
-  clearTimeout(typingTimer); 
+        // Coloca o cursor no final do texto
+        const textLength = inputSearch.value.length;
+        inputSearch.setSelectionRange(textLength, textLength);
+    });
 
-  likeValue = inputSearch.value;
+    let likeValue = '';
+    let typingTimer;
+    const doneTypingInterval = 500;
 
-  if (likeValue === "") {
-    formSearch.style.border = "3px solid red";
-    inputSearch.value = ''
-	document.forms["formSearch"].submit();
-  } else {
-    typingTimer = setTimeout(function() {
-      document.forms["formSearch"].submit();
-    }, doneTypingInterval);
-  }
-});
+    inputSearch.addEventListener("input", function(event) {
+        clearTimeout(typingTimer);
 
-inputSearch.addEventListener("focus", function() {
-	formSearch.style.border = "3px solid green";
-});
+        likeValue = inputSearch.value;
 
-inputSearch.addEventListener("blur", function() {
-	formSearch.style.border = "1px solid black";
-	inputSearch.style.borderColor = "transparent";
-});
+        if (likeValue === "") {
+            formSearch.style.border = "3px solid red";
+            inputSearch.value = '';
+            enviaSearch(event);
+        } else {
+            typingTimer = setTimeout(function() {
+                enviaSearch(event);
+            }, doneTypingInterval);
+        }
+    });
 
-button_search_cancel.addEventListener("click", function(event) {
-	inputSearch.value = ''
-	document.forms["formSearch"].submit();
-}) // Faz apenas um envio vazio, logo retorna todos os produtos
+    inputSearch.addEventListener("focus", function() {
+        formSearch.style.border = "3px solid green";
+    });
 
-function mostrarNotificação() {
-	const toast = document.getElementById("wrapper_toast");
-	toast.style.display = "block";
+    inputSearch.addEventListener("blur", function() {
+        formSearch.style.border = "1px solid black";
+        inputSearch.style.borderColor = "transparent";
+    });
 
-	setTimeout(() => {
-		toast.style.animation = "backOutDown 1s ease-in-out forwards";
+    button_search_cancel.addEventListener("click", function(event) {
+        inputSearch.value = '';
+        enviaSearch(event);
+    }); // Faz apenas um envio vazio, logo retorna todos os produtos
 
-		toast.addEventListener("animationend", () => {
-			toast.style.display = "none";
-		});
-	}, 3000);
-}
+    function enviaSearch(event) {
+        event.preventDefault();
+
+        // Pega os dados do formulário
+        const formData = new FormData(formSearch);
+        const params = new URLSearchParams(formData);
+
+        // Aqui você constrói a URL com os parâmetros de pesquisa
+        const url = `${formSearch.action}?${params.toString()}`;
+
+        fetch(url, {
+            method: formSearch.getAttribute('method'),
+        }).then(response => response.json())
+            .then(data => {
+                atualizarTabela(data.produtos);
+            })
+            .catch(error => console.error('Erro ao enviar os dados!', error));
+    }
+})();
