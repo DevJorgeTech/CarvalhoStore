@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -172,7 +171,7 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 
 	}
 
-	public void insertProduct(Produto produto, HttpServletRequest request, HttpServletResponse response) {
+	public String insertProduct(Produto produto, HttpServletRequest request, HttpServletResponse response) {
 		
 		String sql = "INSERT INTO produtos (nome, vp, idCategoria, codigo, dataCadastro) VALUES (?,?,?,?,?)";
 
@@ -192,14 +191,14 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 
 			fecharConexao(con);
 
-			enviaNotificaoSucesso(1, request, response);
+			return enviaNotificaoSucesso(1);
 
 		} catch (Exception e) {
-			enviaNotificaoErro(1, produto, request, response, e);
+			return enviaNotificaoErro(1, produto, e);
 		}
 	}
 	
-	public void updateProduct(Produto produto, HttpServletRequest request, HttpServletResponse response) {
+	public String updateProduct(Produto produto, HttpServletRequest request, HttpServletResponse response) {
 		String sql = "UPDATE PRODUTOS " +
 	             	 "SET NOME = ?, VP = ?, IDCATEGORIA = ?, CODIGO = ? " +
 	             	 "WHERE IDPRODUTOS = ?";
@@ -219,10 +218,10 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 			
 			fecharConexao(con);
 			
-			enviaNotificaoSucesso(2, request, response);
+			return enviaNotificaoSucesso(2);
 						
 		} catch (Exception e) {
-			enviaNotificaoErro(2, produto, request, response, e);
+			return enviaNotificaoErro(2, produto, e);
 		}
 
 	}

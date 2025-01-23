@@ -1,76 +1,178 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+@import
+	url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap')
+	;
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
-body{
-  height: 100vh;  /* Body ocupando 100% da tela */
-  overflow: hidden;
+body {
+	height: 100vh; /* Body ocupando 100% da tela */
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+	font-weight: 400;
 }
 
-#content{
-	border: 1px solid black;
-	background-color: black;
+#conteiner_main {
+	height: 100%;
+	width: calc(100% - 85px);
+	transition: 1s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-#menu_lateral{
-    width: 80px;
-    height: 100%;
-    background-color: #202020;
-    padding: 40px 0px 40px 1%;
-    box-shadow: 5px 0 0 rgb(184, 23, 23);
-    /* Se o body for maior que a tela usar essas config: */
-    /* position: fixed; O menu ficará fixo */
-    /* top: 0; Posição do menu */
-    /* left: 0; Posção do menu */
-    transition: 1s;
+#menu_lateral {
+	width: 80px;
+	height: 100%;
+	background-color: #202020;
+	padding: 40px 0px 40px 1%;
+	box-shadow: 6px 0 0 rgb(184, 23, 23);
+	/* Se o body for maior que a tela usar essas config: */
+	/* position: fixed; O menu ficará fixo */
+	/* top: 0; Posição do menu */
+	/* left: 0; Posção do menu */
+	transition: 1s;
 }
 
-#btn-expandir{
-    width: 100%;
-    padding-left: 10px;
-    padding-bottom: 10%;
+#btn-expandir {
+	width: 100%;
+	padding-left: 10px;
+	padding-bottom: 10%;
 }
 
-#btn-expandir i{
-    color: white;
-    font-size: 25pt;
-    cursor: pointer;  /* Quando o curso passar em cima de um elemento ele muda seu estado  */
+#btn-expandir i {
+	color: white;
+	font-size: 25pt;
+	cursor: pointer;
+	/* Quando o curso passar em cima de um elemento ele muda seu estado  */
 }
 
-ul{
-    height: 100%;
-    list-style-type: none;
+ul {
+	height: 100%;
+	list-style-type: none;
 }
 
-.item_menu a{
-    color: white;
-    text-decoration: none;
-    font-size: 20px;
-    padding: 10px 4%;
-    display: flex;
-    margin-bottom: 18px;
-    line-height: 40px;  /* Altura da linha */
-    overflow: hidden; /* Esconde os titulos */
-} 
-
-.item_menu a .text-link{
-    margin-left: 32px;
+.item_menu a {
+	color: white;
+	text-decoration: none;
+	font-size: 20px;
+	padding: 10px 4%;
+	display: flex;
+	margin-bottom: 18px;
+	line-height: 40px; /* Altura da linha */
+	overflow: hidden; /* Esconde os titulos */
 }
 
-.item_menu a .icone{
-    font-size: 25px;
-    margin-left: 12px;
+.item_menu a .text-link {
+	margin-left: 32px;
 }
 
-.item_menu:hover{
-    background-color: crimson;
+.item_menu a .icone {
+	font-size: 25px;
+	margin-left: 12px;
 }
 
-.item_menu{
-    transition: 0.5s;
+.item_menu:hover {
+	background-color: crimson;
 }
 
+.item_menu {
+	transition: 0.5s;
+}
 
+/* Criação do Toast */
 
+/* Configurações Padrões de do Toast*/
+#wrapper_toast {
+	display: none;
+	width: 380px;
+	bottom: 20px;
+	right: 20px;
+	position: fixed;
+}
+
+.toast {
+	width: 100%;
+	height: 80px;
+	padding: 20px;
+	background-color: #ffffff;
+	border-radius: 7px;
+	display: grid;
+	grid-template-columns: 1.3fr 6fr 0.5fr;
+	box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+}
+
+.container-1 i {
+	font-size: 35px;
+}
+
+.container-2 p:first-child {
+	color: #101020;
+	font-weight: 600;
+	font-size: 16px;
+}
+
+.container-2 p:last-child {
+	font-size: 12px;
+	font-weight: 400;
+	color: #656565;
+}
+
+/* Fim das configurações padrões de do Toast*/
+
+/* Tipos de Toast*/
+.Sucesso {
+	border-left: 8px solid #47D764;
+}
+
+.Sucesso i {
+	color: #47D764;
+}
+
+.Erro {
+	border-left: 8px solid #ff355b;
+}
+
+.Erro i {
+	color: #ff355b;
+}
+
+/* Fim dos tipos de Toast*/
+
+/* Animações dos Toast */
+@keyframes backInRight { /* Animação de Entrada */
+    0% {
+        transform: translateX(2000px) scale(0.7);
+        opacity: 0.7;
+    }
+    80% {
+        transform: translateX(0px) scale(0.7);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes backOutDown { /* Animação de Saída */
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    20% {
+        transform: translateY(0px) scale(0.7);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(700px) scale(0.7);
+        opacity: 0.7;
+    }
+}
