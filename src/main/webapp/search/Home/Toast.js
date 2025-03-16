@@ -30,7 +30,7 @@ function mostrarNotificação(type, status) {
 
 	wrapper_toast.addEventListener("animationend", () => {
 		// Agora reaplicamos a animação de saída (backOutDown)
-		wrapper_toast.style.animation = "backOutDown 1s ease-in-out forwards 1s";
+		wrapper_toast.style.animation = "backOutDown 1s ease-in-out forwards 1.5s";
 	});
 }
 

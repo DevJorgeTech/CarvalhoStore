@@ -1,0 +1,84 @@
+@import
+	url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap')
+	;
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+#form-container {
+	border: 1px, solid red;
+	width: 70%;
+	height: 80%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+
+#frmCadPedido {
+	border: 1px, solid;
+	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 60%;
+}
+
+h1 {
+	color: #66bbff;
+	text-align: center;
+	margin-top: 10px;
+}
+
+#button-container {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+
+.Botao1 {
+	text-decoration: none;
+	background-color: #66bbff;
+	padding: 5px 10px 5px 10px;
+	color: #fff;
+	font-size: 1.2em;
+	font-weight: 700;
+	border-radius: 5px;
+	border: 0;
+	cursor: pointer;
+}
+
+#fornecedor {
+	padding: 2px;
+	border: 1px solid #66bbff;
+	border-radius: 5px;
+	color: gray;
+	margin-bottom: 10px;
+}
+
+.Caixa1 {
+	width: 320px;
+	padding: 5px;
+	margin-bottom: 5px;
+	border: 1px solid #66bbff;
+	border-radius: 5px;
+}
+
+.Caixa2 {
+	padding: 5px;
+	border: 1px solid #66bbff;
+	border-radius: 5px;
+	margin-bottom: 5px;
+}
+
+#tabela {
+	margin-top: 10px;
+	border-collapse: collapse;
+}
+
+#tabela td {
+	padding: 10px;
+}
