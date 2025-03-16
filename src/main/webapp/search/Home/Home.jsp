@@ -28,10 +28,10 @@
 
 		<ul>
 			<!-- Itens do menu -->
-			<li class="item_menu"><a href="Cadproduct"> <span
+			<li class="item_menu"><a href="CadPedido"> <span
 					class="icone"> <i class="bi bi-pencil-square"></i>
 				</span> <span class="text-link" translate="no" style="display: none;">Cadastrar
-						Produtos</span>
+						Pedido</span>
 			</a></li>
 			<li class="item_menu"><a href="ListProduct"> <span
 					class="icone"> <i class="bi bi-arrow-repeat"></i>

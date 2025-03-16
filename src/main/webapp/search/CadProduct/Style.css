@@ -10,27 +10,157 @@
 
 #form-container {
 	border: 1px, solid red;
-	width: 70%;
-	height: 80%;
+	width: 80%;
+	height: 85%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	position: relative;
+	align-items: center;
 }
 
 #frmCadProduct {
-	border: 1px, solid;
+	border: 1px, solid blue;
 	border-radius: 5px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	height: 70%;
+	height: 90%;
+	width: 100%;
+	display: grid;
+	grid-template-rows: 0.5fr 3fr 0.5fr;
+	gap: 1px;
+	display: grid;
 }
 
 h1 {
 	color: #66bbff;
 	text-align: center;
 	margin-top: 10px;
+}
+
+#main-container {
+	display: grid;
+	grid-template-rows: 0.2fr 1fr;
+	border-bottom: 1px solid black;
+	border-top: 1px solid black;
+	margin-bottom: 5px;
+}
+
+#section-pedido {
+	display: flex;
+	justify-content: space-around;
+	padding: 10px;
+	border-bottom: 1px solid black;
+}
+
+.pair {
+    display: flex;
+    align-items: center; 
+}
+
+#section-pedido label {
+    margin-right: 5px; 
+}
+
+#section-pedido input {
+    padding-left: 5px;
+}
+
+#section-produto {
+	display: flex;
+	gap: 20px; 
+}
+
+#tb_produtos {
+	border: 1px solid red; 
+	width: 100%;
+	height: 35%;
+}
+
+#tb_produtos td {
+	padding: 0;
+	height: 40px; 
+	vertical-align: middle; 
+}
+
+th, td {
+	border: 1px solid #ccc;
+	padding: 10px;
+	text-align: center;
+}
+
+th {
+	background-color: #f4f4f4;
+}
+
+#tb_produtos input:not([type="checkbox"]) {
+    width: 100%; 
+    height: 100%; 
+    box-sizing: border-box;
+    text-indent: 10px;
+}
+
+#tb_produtos input[type="checkbox"] {
+  	height: 20px;
+  	width: 20px;
+}
+
+select {
+	flex: 1 1 45%; /* O select ocupará a largura total disponível */
+	padding: 10px;
+	margin: 0;
+	color: gray;
+	border-radius: 5px;
+	height: 50px;
+	width: 100%;
+}
+
+#tb_produtos th:nth-child(1) { /* Nome */
+	width: 200px;
+}
+
+#tb_produtos th:nth-child(2) { /* Preço_Venda */
+	width: 120px;
+}
+
+#tb_produtos th:nth-child(3) { /* Categoria */
+	width: 250px;
+}
+
+#tb_produtos th:nth-child(4) { /* Código */
+	width: 150px;
+}
+
+#tb_produtos th:nth-child(5) { /* Produtos na Caixa */
+	width: 110px;
+}
+
+#tb_produtos th:nth-child(6) { /* Valor da Caixa */
+	width: 140px;
+}
+
+#tb_produtos th:nth-child(7) { /* Recompra? */
+	width: 100px;
+}
+
+.Caixa1 {
+	flex: 1 1 45%; /* Faz os inputs ocuparem 45% da largura do contêiner */
+	min-width: 180px;
+	/* Impede que os inputs fiquem menores do que um certo tamanho */
+	padding: 10px;
+	margin: 0; /* Remove margens indesejadas */
+	border: 1px solid #66bbff;
+	border-radius: 5px;
+	height: 50px;
+}
+
+label {
+	color: gray;
+}
+
+.Caixa2 {
+	border: 1px solid #66bbff;
+	border-radius: 5px;
+	height: 30px;
+	min-width: 180px;
 }
 
 #button-container {
@@ -51,34 +181,14 @@ h1 {
 	cursor: pointer;
 }
 
-#category {
-	padding: 2px;
-	border: 1px solid #66bbff;
+.Botao2 {
+	text-decoration: none;
+	background-color: #ff0000;
+	padding: 2.5px 5px 2.5px 5px;
+	color: #fff;
+	font-size: 1em;
+	font-weight: 700;
 	border-radius: 5px;
-	color: gray;
-	margin-bottom: 10px;
-}
-
-.Caixa1 {
-	width: 320px;
-	padding: 5px;
-	margin-bottom: 5px;
-	border: 1px solid #66bbff;
-	border-radius: 5px;
-}
-
-.Caixa2 {
-	padding: 5px;
-	border: 1px solid #66bbff;
-	border-radius: 5px;
-	margin-bottom: 5px;
-}
-
-#tabela {
-	margin-top: 10px;
-	border-collapse: collapse;
-}
-
-#tabela td {
-	padding: 10px;
+	border: 0;
+	cursor: pointer;
 }

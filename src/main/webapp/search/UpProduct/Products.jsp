@@ -18,7 +18,7 @@
 		<h1>Tabela de Produtos</h1>
 
 		<div id="conteiner-search">
-			<form action="search" method="get" id="formSearch">
+			<form action="searchProduct" method="get" id="formSearch">
 				<input type="search" id="search" name="search"
 					value="${param.search}">
 				<!-- Estou capturando o valor de um parametro da url -->
@@ -34,7 +34,7 @@
 					<tr>
 						<th>ID Produto</th>
 						<th>Nome</th>
-						<th>Valor por Unidade (VP)</th>
+						<th>Preço_Venda</th>
 						<th>Categoria</th>
 						<th>Código</th>
 						<th>Data de Cadastro</th>
@@ -48,7 +48,7 @@
 					<tr>
 						<td><%=produtos.get(i).getIdProduto()%></td>
 						<td><%=produtos.get(i).getNome()%></td>
-						<td><%=produtos.get(i).getVp()%></td>
+						<td><%=produtos.get(i).getPreco_Venda()%></td>
 						<td><%=produtos.get(i).getCategoria().getDescricao()%></td>
 						<td><%=produtos.get(i).getCodigo()%></td>
 						<td><%=produtos.get(i).getDataCadastro()%></td>

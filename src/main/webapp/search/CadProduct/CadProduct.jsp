@@ -2,60 +2,79 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="Model.Categoria"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="com.google.gson.Gson"%>
 <%
 ArrayList<Categoria> categorias = (ArrayList<Categoria>) request.getAttribute("categorias");
+
+String categoriasJson = new Gson().toJson(categorias);
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="/CarvalhoStore/search/CadProduct/Style.css?v=1.0.1">
+<link rel="stylesheet"
+	href="/CarvalhoStore/search/CadProduct/Style.css?v=1.0.1">
 <title>CarvalhoStore</title>
 </head>
 <body>
 	<div id="form-container">
-		<form name="frmCadProduct" action="insert" method="POST"
+		<form name="frmCadProduct" action="insertProduto" method="POST"
 			id="frmCadProduct">
-			<h1>Adicionar Produto</h1>
-			<table id="tabela">
-				<tr>
-					<td><input type="text" name="nome" required minlength="1"
-						placeholder="Nome do Produto" class="Caixa1"></td>
-				</tr>
-				<tr>
-					<td><input type="text" name="vp" id="vp" required
-						minlength="1" pattern="[\d.,]*" placeholder="Valor Por Unidade"
-						class="Caixa2"></td>
-				</tr>
-				<tr>
-					<td><input type="text" name="codigo" required minlength="1"
-						placeholder="Código do Produto" class="Caixa1"></td>
-				</tr>
-				<tr>
-					<td><select id="category" name="category" required>
-							<option value="0" disabled selected>Selecione uma
-								categoria</option>
-							<%
-							for (int i = 0; i < categorias.size(); i++) {
-							%>
-							<option
-								value="<%=String.valueOf(categorias.get(i).getIdCategory())%>"><%=categorias.get(i).getDescricao()%></option>
-							<%
-							}
-							%>
-					</select></td>
-				</tr>
-			</table>
+
+			<div id="titule">
+				<h1>Adicionar Produto</h1>
+			</div>
+
+			<div id="main-container">
+
+				<div id="section-pedido">
+					<div class="pair">
+						<label for="codigo_pedido">Código do Pedido: </label> <input
+							type="text" id="codigo_pedido" name="codigo_pedido"
+							class="Caixa2" readonly value="${param.codigo}">
+					</div>
+					<div class="pair">
+						<label for="valor_pedido">Valor do Pedido: </label> <input
+							type="text" id="valor_pedido" class="Caixa2" readonly
+							value="${param.valorT}">
+					</div>
+				</div>
+
+
+				<div id="section-produto">
+					<table id="tb_produtos">
+						<thead>
+							<tr>
+								<th>Nome</th>
+								<th>Preço_Venda</th>
+								<th>Categoria</th>
+								<th>Código</th>
+								<th>Produtos na Caixa</th>
+								<th>Valor da Caixa</th>
+								<th>Recompra?</th>
+								<th>Excluir</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
 
 			<div id="button-container">
-				<input type="submit" value="Adicionar" class="Botao1">
-				<!-- Envia os dados do Forms para o ServerLet -->
+				<input type="button" value="Adicionar Produto" class="Botao1"
+					id="btn_adicionar" onclick="adicionarLinha()"> 
+				<input type="submit" value="Salvar" class="Botao1">
 				<input type="reset" value="Cancelar" class="Botao1">
 			</div>
 		</form>
+		<!-- Fim do Forms -->
 	</div>
 
-	<script src="/CarvalhoStore/search/CadProduct/validacaoCadProduct.js"></script>
-
+	<script src="/CarvalhoStore/search/CadProduct/CadProduct.js"></script>
+	<script>
+        var categorias = <%=categoriasJson%>;
+    </script>
 </body>
 </html>

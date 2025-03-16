@@ -13,7 +13,7 @@ function atualizarTabela(produtos) {
         tr.innerHTML = `
             <td>${produto.idProduto}</td>
             <td>${produto.nome}</td>
-            <td>${produto.vp}</td>
+            <td>${produto.preco_Venda}</td>
             <td>${produto.categoria.descricao}</td>
             <td>${produto.codigo}</td>
             <td>${produto.dataCadastro}</td>
