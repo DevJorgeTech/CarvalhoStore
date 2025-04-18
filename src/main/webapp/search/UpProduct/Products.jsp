@@ -10,8 +10,8 @@
 <head>
 <meta charset="UTF-8">
 <title>CarvalhoStore</title>
-<link rel="stylesheet"
-	href="/CarvalhoStore/search/UpProduct/ProductsStyle.css">
+<link rel="stylesheet" href="/CarvalhoStore/search/UpProduct/ProductsStyle.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
 	<div id="conteiner-products">
@@ -51,7 +51,7 @@
 						<td><%=produtos.get(i).getPreco_Venda()%></td>
 						<td><%=produtos.get(i).getCategoria().getDescricao()%></td>
 						<td><%=produtos.get(i).getCodigo()%></td>
-						<td><%=produtos.get(i).getDataCadastro()%></td>
+						<td><%=produtos.get(i).getFormattedDate()%></td>
 						<td><a
 							href="UpProduct?idProduct=<%=produtos.get(i).getIdProduto()%>"
 							class="Botao1">Editar</a></td>
@@ -67,7 +67,5 @@
 
 	<script src="/CarvalhoStore/search/UpProduct/validacaoProducts.js"></script>
 	<script src="/CarvalhoStore/search/UpProduct/atualizaTable.js"></script>
-	<script src="/CarvalhoStore/search/Script_Main/links_internos.js"></script>
-
 </body>
 </html>

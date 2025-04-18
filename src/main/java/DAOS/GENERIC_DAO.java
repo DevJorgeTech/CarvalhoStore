@@ -174,7 +174,7 @@ public class GENERIC_DAO {
 			return gson.toJson(dados);
 		}
 		case 2: { // UPDATE
-			// TODO
+			dados.put("status", "Erro ao alterar produto!");
 		}
 		case 3: { // PERSONALIZADA
 			dados.put("status", msgPersonalizada);

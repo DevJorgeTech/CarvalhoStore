@@ -21,19 +21,19 @@
 			<table id="tabela">
 				<tr>
 					<td><input type="text" id="codigo" name="codigo" 
-						placeholder="Código do Pedido" class="Caixa1" ></td>
+						placeholder="Código do Pedido" class="Caixa1" required ></td>
 				</tr>
 				<tr>
 					<td><select id="fornecedor" name="fornecedor" required>
 							<option value="0" disabled selected>Selecione um fornecedor</option>
-								<%
+							<%
 							for (int i = 0; i < fornecedores.size(); i++) {
 							%>
 							<option
 								value="<%=String.valueOf(fornecedores.get(i).getIdFornecedor())%>"><%=fornecedores.get(i).getNome()%></option>
 							<%
 							}
-							%>
+							%> 
 					</select></td>
 				</tr>
 				<tr>

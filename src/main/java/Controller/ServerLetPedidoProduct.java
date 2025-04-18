@@ -52,11 +52,7 @@ public class ServerLetPedidoProduct extends HttpServlet {
 	private void insertProductPedido(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		listProdutosPedidos = (List<ProdutoPedido>) request.getAttribute("produtosPedidos");
-		
-		for (ProdutoPedido produtoPedido : listProdutosPedidos) {
-			System.out.println(produtoPedido.getIdCategoria());
-		}
-				
+					
 		String resposta = product_pedido.insertProductsPedidos(listProdutosPedidos);
 				
 		response.setContentType("application/json");

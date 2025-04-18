@@ -65,8 +65,8 @@ String categoriasJson = new Gson().toJson(categorias);
 			<div id="button-container">
 				<input type="button" value="Adicionar Produto" class="Botao1"
 					id="btn_adicionar" onclick="adicionarLinha()"> 
-				<input type="submit" value="Salvar" class="Botao1">
-				<input type="reset" value="Cancelar" class="Botao1">
+				<input type="submit" value="Salvar" class="Botao1" id="btnSalvar" disabled>
+				<input type="reset" value="Cancelar" class="Botao1" id="btnCancelar" disabled>
 			</div>
 		</form>
 		<!-- Fim do Forms -->

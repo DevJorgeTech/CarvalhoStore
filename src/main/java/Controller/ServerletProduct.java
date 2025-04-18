@@ -87,28 +87,11 @@ public class ServerletProduct extends HttpServlet {
 		System.out.println(action + " doPost ServerLetProduto");
 
 		if (action.equals("/search/Home/insertProduto")) {
-			//validaProdutos(request, response);
-			teste(request, response);
+			validaProdutos(request, response);
 		} else if (action.equals("/search/Home/update")) {
 			updateProduto(request, response);
 		}
 	};
-
-	private void teste(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		BufferedReader reader = request.getReader();
-		StringBuilder sb = new StringBuilder();
-		String line;
-
-		// Cria o JSON linha a linha
-		while ((line = reader.readLine()) != null) {
-			sb.append(line);
-		}
-
-		String json = sb.toString();
-		
-		System.out.println(json);
-		
-	}
 
 	private void cadastroProduto(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -230,38 +213,45 @@ public class ServerletProduct extends HttpServlet {
 
 	private void produtoByUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-//		produto.setIdProduto(request.getParameter("idProduct"));
-//
-//		product_dao.selectProductById(produto);
-//
-//		request.setAttribute("productName", produto.getNome());
-//		request.setAttribute("productVp", produto.getVp());
-//		request.setAttribute("productCategory", produto.getCategoria());
-//		request.setAttribute("productCodigo", produto.getCodigo());
-//
-//		ArrayList<Categoria> categorias = category_dao.selectAllCategorysByDiferentThen(produto.getCategoria());
-//
-//		request.setAttribute("categorias", categorias);
-//
-//		RequestDispatcher rd = request.getRequestDispatcher("/search/UpProduct/UpdateProduct.jsp");
-//
-//		rd.forward(request, response);
+		produto.setIdProduto(request.getParameter("idProduct"));
+
+		product_dao.selectProductById(produto);
+
+		request.setAttribute("productName", produto.getNome());
+		request.setAttribute("productPrecoVenda", produto.getPreco_Venda());
+		request.setAttribute("productCategory", produto.getCategoria());
+		request.setAttribute("productCodigo", produto.getCodigo());
+		request.setAttribute("productStatus", produto.getStatus());
+		
+		System.out.println(produto.getStatus());
+				
+		ArrayList<Categoria> categorias = category_dao.selectAllCategorysByDiferentThen(produto.getCategoria());
+
+		request.setAttribute("categorias", categorias);
+
+		RequestDispatcher rd = request.getRequestDispatcher("/search/UpProduct/UpdateProduct.jsp");
+
+		rd.forward(request, response);
 	}
 
 	private void updateProduto(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//		produto.setNome(request.getParameter("nome"));
-//		produto.setVp(Double.parseDouble(request.getParameter("vp")));
-//		produto.setCodigo(request.getParameter("codigo"));
-//		produto.setCategoria(category_dao.selectCategoryById(Integer.parseInt(request.getParameter("category"))));
-//
-//		String resposta = product_dao.updateProduct(produto, request, response);
-//		
-//		System.out.println(resposta);
-//				
-//		response.setContentType("application/json");
-//		response.setCharacterEncoding("UTF-8");
-//
-//		response.getWriter().write(resposta);
+		System.out.println("updateProduto");
+		
+		request.setCharacterEncoding("UTF-8");
+		produto.setNome(request.getParameter("nome"));
+		produto.setPreco_Venda(Double.parseDouble(request.getParameter("preco_venda")));
+		produto.setCodigo(request.getParameter("codigo"));
+		produto.setCategoria(category_dao.selectCategoryById(Integer.parseInt(request.getParameter("category"))));
+		produto.setStatus(request.getParameter("status"));
+
+		String resposta = product_dao.updateProduct(produto);
+		
+		System.out.println(resposta);
+				
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+
+		response.getWriter().write(resposta);
 
 	}
 
@@ -282,13 +272,15 @@ public class ServerletProduct extends HttpServlet {
 
 		} else {
 			ArrayList<Produto> produtos = product_dao.selectProductLike(like);
-			
+						
 			// Adicionando os produtos no objeto JSON
 			responseJson.add("produtos", gson.toJsonTree(produtos)); // Adicionamos uma chave principal
 		}
-
+				
 		// Convertendo o objeto JSON para uma string
 		String responseJsonString = gson.toJson(responseJson);
+		
+		System.out.println(responseJsonString);
 
 		// Configurando a resposta HTTP
 		response.setContentType("application/json");

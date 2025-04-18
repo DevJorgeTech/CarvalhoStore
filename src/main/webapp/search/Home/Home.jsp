@@ -53,7 +53,9 @@
 		</ul>
 	</nav>
 
-	<div id="conteiner_main"></div>
+	<div id="conteiner_main">
+		<iframe id="app-frame" src="" ></iframe>
+	</div>
 
 	<div id="wrapper_toast">
 		<div class="toast">

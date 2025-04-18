@@ -64,12 +64,13 @@ public class ServerletPedido extends HttpServlet {
 
 	private void cadastroPedido(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<Fornecedor> fornecedores = pedido_dao.selectAllFornecedores();
-
+		
 		request.setAttribute("fornecedores", fornecedores);
-
+		
+		//Redireciona para a página JSP
 		RequestDispatcher rd = request.getRequestDispatcher("/search/CadPedido/CadPedido.jsp");
-
-		rd.forward(request, response);
+		
+        rd.forward(request, response);
 	}
 	
 	private Boolean validaPedido(HttpServletRequest request, HttpServletResponse response) {

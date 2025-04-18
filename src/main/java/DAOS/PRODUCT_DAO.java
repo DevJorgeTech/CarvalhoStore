@@ -113,7 +113,7 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 	public void selectProductById(Produto produto) {
 
 		String sql = "SELECT a.nome, a.Preço_Venda, b.idCategorias, b.descricao, a.codigo, "
-				+ "a.quantidade_estoque, a.dataCadastro " + "FROM produtos a "
+				+ "a.quantidade_estoque, a.dataCadastro, a.status_produto " + "FROM produtos a "
 				+ "JOIN categorias b ON b.idCategorias = a.idCategoria " + "WHERE a.IDPRODUTOS = ?";
 
 		Connection con = conectar();
@@ -136,6 +136,7 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 				produto.setCodigo(rs.getString(5));
 				produto.setQnt_estoque(rs.getInt(6));
 				produto.setDataCadastro(rs.getDate(7));
+				produto.setStatus(rs.getString(8));
 			}
 
 			fecharConexao(con);
@@ -169,15 +170,18 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 			ResultSet rs = pst.executeQuery();
 
 			while (rs.next()) {
+				double preco_venda = rs.getDouble(3);
+
 				Categoria categoria = new Categoria(rs.getInt(4), rs.getString(5));
 
 				produtos.add(new Produto(rs.getString(1), // idProduto
 						rs.getString(2), // nome
-						rs.getDouble(3), // Preço_Venda
-						categoria, rs.getString(6), // codigo
+						preco_venda,
+						categoria, 
+						rs.getString(6), // codigo
 						rs.getInt(7), // qnt_estoque
 						rs.getString(8), // status
-						rs.getDate(9), // dataCadastro
+						rs.getDate(9), // dataCadastro 
 						null));
 			}
 
@@ -323,38 +327,40 @@ public class PRODUCT_DAO extends GENERIC_DAO {
 		}
 	}
 
-//	public String updateProduct(Produto produto) {
-//		String sql = "UPDATE produtos "
-//				+ "SET nome = ?, Preço_Venda = ?, idCategoria = ?, codigo = ?, quantidade_estoque = ?, "
-//				+ "status_produto = ?" + "WHERE idProdutos = ?";
-//
-//		Connection con = conectar();
-//
-//		try {
-//
-//			PreparedStatement pst = con.prepareStatement(sql);
-//
-//			pst.setString(1, produto.getNome());
-//			pst.setDouble(2, produto.getPreco_Venda());
-//			pst.setInt(3, produto.getCategoria().getIdCategory());
-//			pst.setString(4, produto.getCodigo());
-//			pst.setInt(5, produto.getQnt_estoque());
-//			pst.setString(6, produto.getStatus());
-//			pst.setString(7, produto.getIdProduto());
-//
-//			pst.executeUpdate();
-//
-//			fecharConexao(con);
-//
-//			return enviaNotificaoSucesso(2, Produto.class);
-//
-//		} catch (Exception e) {
-//			fecharConexao(con);
-//
-//			return enviaNotificaoErro(2, Produto.class, e, null);
-//		}
-//
-//	}
+	public String updateProduct(Produto produto) {
+		String sql = "UPDATE produtos "
+				+ "SET nome = ?, Preço_Venda = ?, idCategoria = ?, codigo = ?, quantidade_estoque = ?, "
+				+ "status_produto = ? WHERE idProdutos = ?";
+
+		Connection con = conectar();
+
+		try {
+
+			PreparedStatement pst = con.prepareStatement(sql);
+
+			pst.setString(1, produto.getNome());
+			pst.setDouble(2, produto.getPreco_Venda());
+			pst.setInt(3, produto.getCategoria().getIdCategory());
+			pst.setString(4, produto.getCodigo());
+			pst.setInt(5, produto.getQnt_estoque());
+			pst.setString(6, produto.getStatus());
+			pst.setString(7, produto.getIdProduto());
+
+			pst.executeUpdate();
+
+			fecharConexao(con);
+
+			return enviaNotificaoSucesso(2, Produto.class);
+
+		} catch (Exception e) {
+			fecharConexao(con);
+			
+			System.out.println(e);
+
+			return enviaNotificaoErro(e, new Produto(), null, 2);
+		}
+
+	}
 
 //	public String updateQntEstoqueProduct(Produto produto) {
 //		String sql = "UPDATE produtos " + "SET quantidade_estoque = ? "

@@ -1,6 +1,7 @@
 package Model;
 
 import java.sql.Date;
+import java.time.format.DateTimeFormatter;
 
 import com.google.gson.annotations.Expose;
 
@@ -84,6 +85,16 @@ public class Produto {
 	public Date getDataCadastro() {
 		return dataCadastro;
 	}
+	
+	public String getFormattedDate() {
+        if (dataCadastro != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            // Convertendo java.sql.Date para java.time.LocalDate para formatação
+            return dataCadastro.toLocalDate().format(formatter);
+        }
+        return null;  
+    }
 
 	public void setDataCadastro(Date dataCadastro) {
 		this.dataCadastro = dataCadastro;

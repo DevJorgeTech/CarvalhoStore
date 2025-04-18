@@ -1,92 +1,58 @@
 document.querySelectorAll("a").forEach(function(link) {
 	link.addEventListener('click', function(event) {
 
-		let url = this.href;
+		event.preventDefault();
 
-		console.log(url);
+		console.log('Chama: loadPageInConteinerMain');
 
-		loadPageInConteinerMain(event, url);
+		var href = this.getAttribute('href');
+
+		loadPageInConteinerMain(href);
+
 	});
 });
 
-function loadPageInConteinerMain(event, url) {
+function loadPageInConteinerMain(href) {
 
-	event.preventDefault();
-
-	sessionStorage.removeItem('lastConteinerHtml');
-
-	resetScripts();
-
-	fetch(url, {
-		method: 'GET',
-	})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Erro ao carregar a página');
-			}
-			return response.text();
-		})
-		.then(html => {
-			// Insere o HTML na div "conteiner_main"
-			document.getElementById('conteiner_main').innerHTML = html;
-
-			let conteinerHtml = document.getElementById('conteiner_main').innerHTML;
-
-			// Armazena o conteúdo da div no sessionStorage
-			sessionStorage.setItem('lastConteinerHtml', conteinerHtml);
-
-			loadScripts();
-
-		})
-		.catch(error => {
-			console.error('Erro:', error);
-			document.getElementById('conteiner_main').innerHTML = `<p>Erro ao carregar conteúdo: ${error.message}</p>`;
-		});
+	console.log(href)
+	//Adicionamos o href para o iframe para ser gerado uma request http 
+	//(Sempre que o att SRC do iframe é alterado o navegador gera uma nova request)
+	document.getElementById('app-frame').src = href;
 }
 
-function loadScripts() {
-	let scripts = document.querySelectorAll('#conteiner_main script');
+// Adiciona um listener para escutar mensagens do iframe
+window.addEventListener('message', (event) => {
+	console.log("Evento message 1");
 
-	scripts.forEach(script => {
-		let newScript = document.createElement('script');
+	const app_frame = document.getElementById('app-frame');
 
-		if (script.src) {
-			newScript.src = script.src;
-			newScript.dataset.fromConteinerMain = true;
-		} else {
-			newScript.textContent = script.innerHTML;
-			newScript.dataset.fromConteinerMain = true;
+	const iframeOrigin = new URL(app_frame.src).origin;
+
+	if (event.origin === iframeOrigin) {
+		if (event.data && event.data.action === 'submitFormsAndToast') {
+			trataSubmitFormsAndToast(app_frame, event);
+		} else if (event.data && event.data.action === 'enviaSearchProduct') {
+			trataEnviaSearchProduct(event);
+		} else if (event.data && event.data.action === 'loadPageInConteinerMain') {
+			loadPageInConteinerMain(event.data.link);
 		}
+	}
+});
 
-		// Verifica se o script já está presente no body
-		let existingScript = document.querySelector(`script[src="${newScript.src}"]`);
-		if (existingScript) {
-			console.log('Script já carregado:', newScript.src || 'inline script');
-			return; // Se o script já foi carregado, não adiciona novamente
-		}
+function trataSubmitFormsAndToast(iframe, event) {
 
-		// Adiciona o novo script ao body
-		document.body.appendChild(newScript);
-		console.log('Novo script adicionado:', newScript.src || 'inline script');
-	});
+	const iframeDocument = iframe.contentWindow.document;
+
+	const { formId, dadosForm, destinationUrl } = event.data;
+
+	const form = iframeDocument.getElementById(formId);
+
+	submitFormsAndToast(form, dadosForm, event, destinationUrl);
 }
 
+function trataEnviaSearchProduct(event) {
 
+	const { search, idDataList, idItensRecompra } = event.data;
 
-function resetScripts() {
-
-	// Remove todos os scripts na div conteiner_main
-	document.querySelectorAll('#conteiner_main script').forEach(script => {
-		console.log('Removendo script da div:', script.src || 'inline script');
-		script.remove();
-	});
-
-	// Remove scripts externos já adicionados ao body
-	document.querySelectorAll('script').forEach(script => {
-		// Verifica se o script pertence ao conteúdo atual
-		if (script.dataset.fromConteinerMain) {
-			console.log('Removendo script do body:', script.src || 'inline script');
-			script.remove();
-		}
-	});
+	enviaSearchProduct(search, idDataList, idItensRecompra);
 }

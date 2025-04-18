@@ -1,5 +1,11 @@
-function formatarNumero(inputId) {
-	let value = document.getElementById(inputId).value.replace(/,/g, ".");
+const app_frame = document.getElementById('app-frame');
+
+function formatarNumeroDouble(inputId) {
+
+	const iframeDocument = app_frame.contentWindow.document;
+
+	let value = iframeDocument.getElementById(inputId).value.replace(/,/g, ".");
+
 	let isFirstPoint = false;
 	let isSecondPoint = false;
 	let novaStr = "";
@@ -17,11 +23,10 @@ function formatarNumero(inputId) {
 		}
 	}
 
-	document.getElementById(inputId).value = novaStr;
+	iframeDocument.getElementById(inputId).value = novaStr;
 };
 
-function enviaSearchProduct(idInputSearch, idDataList, idItensRecompra) { // Função Utilizada Para Inputs de Pesquisa de Produto via Like
-	const inputSearch = document.getElementById(idInputSearch).value;
+function enviaSearchProduct(inputSearch, idDataList, idItensRecompra) {
 
 	const url = `/CarvalhoStore/search/Home/searchProduct?search=${encodeURIComponent(inputSearch)}`;
 
@@ -34,8 +39,15 @@ function enviaSearchProduct(idInputSearch, idDataList, idItensRecompra) { // Fun
 		.catch(error => console.error('Erro ao enviar os dados!', error));
 };
 
+let preencheCampos;
+
 function populaDataList(idDataList, produtos, idItensRecompra) {
-	let dataList = document.getElementById(idDataList);
+
+	console.log("populaDataList");
+
+	const iframeDocument = app_frame.contentWindow.document;
+
+	const dataList = iframeDocument.getElementById(idDataList);
 
 	while (dataList.firstChild) {
 		dataList.removeChild(dataList.firstChild);
@@ -47,19 +59,48 @@ function populaDataList(idDataList, produtos, idItensRecompra) {
 		dataList.appendChild(option);
 	});
 
-	let inputNome = document.getElementById("inpt_nome_" + idItensRecompra);
+	let inputNome = iframeDocument.getElementById("inpt_nome_" + idItensRecompra);
 
-	inputNome.addEventListener("change", function() {
+	preencheCampos = function() {
+		handleChangeProduto(produtos, inputNome.value, idItensRecompra, iframeDocument);
+	};
 
-		let produtoSelecionado = produtos.find(produto => produto.nome === inputNome.value);
-
-		if (produtoSelecionado) {
-			document.getElementById("inpt_Preco_Venda_" + idItensRecompra).value = produtoSelecionado.preco_Venda;
-			document.getElementById("inpt_codigo_" + idItensRecompra).value = produtoSelecionado.codigo;
-			document.getElementById("inpt_codigo_" + idItensRecompra).readOnly = true;
-			document.getElementById("inpt_category_" + idItensRecompra).value = produtoSelecionado.categoria.idCategory;
-		}
-	});
+	inputNome.addEventListener("change", preencheCampos);
 };
 
+function handleChangeProduto(produtos, inputNomeValue, idItensRecompra, iframeDocument) {
+	console.log("handleChangeProduto");
 
+	let produtoSelecionado = produtos.find(produto => produto.nome === inputNomeValue);
+
+	if (produtoSelecionado) {
+		iframeDocument.getElementById("inpt_Preco_Venda_" + idItensRecompra).value = produtoSelecionado.preco_Venda;
+		iframeDocument.getElementById("inpt_codigo_" + idItensRecompra).value = produtoSelecionado.codigo;
+		iframeDocument.getElementById("inpt_codigo_" + idItensRecompra).readOnly = true;
+		iframeDocument.getElementById("inpt_category_" + idItensRecompra).value = produtoSelecionado.categoria.idCategory;
+	}
+}
+
+window.addEventListener('message', (event) => {
+	console.log("Event message 2")
+
+	const iframeOrigin = new URL(app_frame.src).origin;
+
+	const iframeDocument = app_frame.contentWindow.document;
+
+	if (event.origin === iframeOrigin) {
+		if (event.data && event.data.action === 'removerEvent') {
+			if (event.data.function === 'preencheCampos') {
+				let inputNome = iframeDocument.getElementById("inpt_nome_" + event.data.idItensRecompra);
+
+				inputNome.removeEventListener(event.data.evento, preencheCampos);
+			}
+		} else if (event.data && event.data.action === 'formatarNumeroDouble') {
+			let inputToFormatNumero = iframeDocument.getElementById(event.data.elementId);
+
+			inputToFormatNumero.addEventListener('change', function() {
+				formatarNumeroDouble(this.id);
+			});
+		}
+	}
+});
