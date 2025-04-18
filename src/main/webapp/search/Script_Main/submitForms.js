@@ -1,8 +1,6 @@
-function submitFormsAndToast(formId, dadosForm, event, destinationUrl) {
+function submitFormsAndToast(form, dadosForm, event, destinationUrl) {
 
 	event.preventDefault();
-
-	let form = document.getElementById(formId);
 	
 	const formData = new FormData(form);
 	
@@ -12,13 +10,13 @@ function submitFormsAndToast(formId, dadosForm, event, destinationUrl) {
 
 	fetch(form.action, {
 		method: form.getAttribute('method'),
-		body: formData
+		body: dadosForm ? dadosForm : formData
 	}).then(response => response.json())
 		.then(data => {
 			mostrarNotificação(data.type, data.status);
 
-			if (destinationUrl !== '' && destinationUrl && data.type === "Sucesso") {
-				loadPageInConteinerMain(event, destinationUrl);
+			if (destinationUrl && data.type === "Sucesso") {
+				loadPageInConteinerMain(destinationUrl);
 			}
 		})
 		.catch(error => console.error('Erro ao enviar os dados:', error));

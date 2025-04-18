@@ -1,31 +1,12 @@
-document.getElementById("frmCadProduct").querySelectorAll('input, select').forEach(field => {
-	field.addEventListener('invalid', (event) => {
-
-		const category = document.getElementById("category");
-
-		const recompra = document.getElementById("recompra");
-
-		field.style.border = '2px solid red';
-
-		if (category.value === "0" && !recompra.checked) {
-			category.style.border = '2px solid red';
-		}
-
-		if (event.target.validity.patternMismatch) { //Evento acionado qnd for digitado letras
-			event.target.setCustomValidity('Por favor, insira apenas números, vírgulas ou pontos.');
-		}
-	});
-
-	field.addEventListener('input', () => {
-		field.style.border = '';
-		field.setCustomValidity('');
-	});
-});
-
 document.getElementById('frmCadProduct').addEventListener('submit', event => {
+	event.preventDefault();
 
-	submitFormsAndToast("frmCadProduct", retornaDadosForm(), event, '/CarvalhoStore/search/Home/CadPedido');
-
+	parent.postMessage({
+		action: 'submitFormsAndToast',
+		formId: 'frmCadProduct',
+		dadosForm: retornaDadosForm(),
+		destinationUrl: '/CarvalhoStore/search/Home/CadPedido'
+	}, '*');
 });
 
 function retornaDadosForm() {
@@ -79,15 +60,20 @@ document.getElementById("frmCadProduct").addEventListener('reset', (event) => {
 let typingTimer;
 const doneTypingInterval = 1000;
 
-function enviaDadosSearch(nome, dataList, idItensRecompra) {
+function enviaDadosSearch(inputNome, dataList, idItensRecompra) {
 
 	clearTimeout(typingTimer); // evita múltiplas requisições
 
 	typingTimer = setTimeout(function() {
-		enviaSearchProduct(nome.id, dataList.id, idItensRecompra);
+		parent.postMessage({
+			action: 'enviaSearchProduct',
+			search: inputNome.value,
+			idDataList: dataList.id,
+			idItensRecompra: idItensRecompra
+		}, '*');
 	}, doneTypingInterval);
 
-	nome.addEventListener("change", function() {
+	inputNome.addEventListener("change", function() {
 		clearTimeout(typingTimer);
 	});
 }
@@ -119,8 +105,10 @@ function recompraChecked(idItensRecompra) {
 	});
 
 	let nome = document.getElementById("inpt_nome_" + idItensRecompra);
+
 	let dataListName = document.createElement("datalist");
 	dataListName.id = 'dataListName_' + idItensRecompra;
+
 	nome.setAttribute('list', dataListName.id);
 	nome.setAttribute('autocomplete', 'off');
 	nome.appendChild(dataListName);
@@ -133,13 +121,12 @@ function recompraChecked(idItensRecompra) {
 };
 
 function recompraNotChecked(idItensRecompra) {
-	console.log(idItensRecompra);
 
 	let nome = document.getElementById("inpt_nome_" + idItensRecompra);
 
 	nome.removeEventListener("input", inputHandler);
 
-	let elementos = document.querySelectorAll('[id*="_' + idItensRecompra + '"]:not(#codigo_pedido)');
+	let elementos = document.querySelectorAll('[id*="_' + idItensRecompra + '"]');
 	let dataList = document.getElementById("dataListName_" + idItensRecompra);
 
 	dataList.remove();
@@ -147,7 +134,14 @@ function recompraNotChecked(idItensRecompra) {
 	elementos.forEach(field => {
 		field.readOnly = false;
 		field.disabled = false;
-	})
+	});
+
+	parent.postMessage({
+		action: 'removerEvent',
+		evento: 'change',
+		function: 'preencheCampos',
+		idItensRecompra: idItensRecompra
+	}, '*');
 }
 
 function adicionarLinha() {
@@ -184,6 +178,11 @@ function adicionarLinha() {
 				input.name = 'produto' + produtoNum + '_preco_venda';
 				input.required = true;
 				input.minlength = 1;
+				parent.postMessage({
+					action: 'formatarNumeroDouble',
+					elementId: input.id,
+				}, '*');
+				input.setAttribute('pattern', '^[0-9]+(\.[0-9]+)?$');
 				td.appendChild(input);
 				break;
 
@@ -224,8 +223,8 @@ function adicionarLinha() {
 				input.setAttribute('type', 'text');
 				input.id = 'inpt_qnt_cx_' + produtoNum;
 				input.name = 'produto' + produtoNum + '_qnt_cx';
+				input.setAttribute('pattern', '^[0-9]+$');
 				input.required = true;
-				input.minlength = 1;
 				td.appendChild(input);
 				break;
 
@@ -236,6 +235,11 @@ function adicionarLinha() {
 				input.name = 'produto' + produtoNum + '_valor_cx';
 				input.required = true;
 				input.minlength = 1;
+				parent.postMessage({
+					action: 'formatarNumeroDouble',
+					elementId: input.id,
+				}, '*');
+				input.setAttribute('pattern', '^[0-9]+(\.[0-9]+)?$');
 				td.appendChild(input);
 				break;
 
@@ -286,6 +290,7 @@ function adicionarLinha() {
 	}
 
 	tbody.appendChild(tr);
+	liberaBtnsAcoes();
 }
 
 function excluiLinha(button) {
@@ -330,6 +335,8 @@ function excluiLinha(button) {
 		e.id = 'tr_' + idsNv[index];
 		corrigeInputs(idsNv[index], e.children);
 	});
+
+	liberaBtnsAcoes();
 }
 
 function corrigeInputs(idPai, filhos) {
@@ -385,4 +392,20 @@ function corrigeInputs(idPai, filhos) {
 			}
 		});
 	});
+}
+
+function liberaBtnsAcoes() {
+	const tb_produtos = document.getElementById('tb_produtos');
+	const tds = tb_produtos.querySelectorAll('td');
+
+	let btnSalvar = document.getElementById('btnSalvar');
+	let btnCancelar = document.getElementById('btnCancelar');
+
+	if (tds.length > 0) {
+		btnSalvar.disabled = false;
+		btnCancelar.disabled = false;
+	} else {
+		btnSalvar.disabled = true;
+		btnCancelar.disabled = true;
+	}
 }

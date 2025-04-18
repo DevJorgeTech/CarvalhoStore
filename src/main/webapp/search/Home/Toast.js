@@ -10,6 +10,8 @@ const time = 2000
 
 function mostrarNotificação(type, status) {
 	
+	console.log("mostrarNotificação")
+	
 	if(!isFirstNotification){
 		wrapper_toast.classList.add(type);
 		isFirstNotification = true;

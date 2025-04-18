@@ -1,38 +1,39 @@
-function configureFormValidation() {
+const form = document.getElementById('frmUpdateProduct');
 
-	const form = document.getElementById('frmUpdateProduct');
+const category = document.getElementById("category")
 
-	const category = document.getElementById("category")
+form.querySelectorAll('input, select').forEach(field => {
+	field.addEventListener('invalid', (event) => {
+		field.style.border = '2px solid red';
+		field.setCustomValidity('Este campo é obrigatório!');
 
-	form.querySelectorAll('input, select').forEach(field => {
-		field.addEventListener('invalid', (event) => {
-			field.style.border = '2px solid red';
-			field.setCustomValidity('Este campo é obrigatório!');
-
-			if (event.target.validity.patternMismatch) {
-				event.target.setCustomValidity('Por favor, insira apenas números, vírgulas ou pontos.');
-			}
-
-		});
-
-		field.addEventListener('input', () => {
-			field.style.border = '';
-			field.setCustomValidity('');  // Limpa a validade personalizada para permitir nova validação
-		});
-	});
-
-	form.addEventListener('submit', (event) => {
-		if (category.value === "0") {
-			category.style.border = '2px solid red';
-			// Impede o envio do formulário 
-			event.preventDefault();
-		} else {
-			submitFormsAndToast(form.id,event,'ListProduct');
+		if (event.target.validity.patternMismatch) {
+			event.target.setCustomValidity('Por favor, insira apenas números, vírgulas ou pontos.');
 		}
-	});
-}
 
-configureFormValidation();
+	});
+
+	field.addEventListener('input', () => {
+		field.style.border = '';
+		field.setCustomValidity('');  // Limpa a validade personalizada para permitir nova validação
+	});
+});
+
+form.addEventListener('submit', (event) => {
+	if (category.value === "0") {
+		category.style.border = '2px solid red';
+		// Impede o envio do formulário 
+		event.preventDefault();
+	} else {
+		parent.postMessage({
+			action: 'submitFormsAndToast',
+			formId: 'frmUpdateProduct',
+			dadosForm: null,
+			destinationUrl: 'ListProduct'
+		}, '*');
+	}
+});
+
 
 function formatarNumero() { // Event onchange
 	let input = document.getElementById("vp");
@@ -58,6 +59,9 @@ function formatarNumero() { // Event onchange
 	input.value = novaStr;
 }
 
-function voltarMenu(event) {
-	loadPageInConteinerMain(event, 'ListProduct');
+function voltarMenu() {
+	parent.postMessage({
+		action: 'loadPageInConteinerMain',
+		link: 'ListProduct'
+	}, '*');
 }

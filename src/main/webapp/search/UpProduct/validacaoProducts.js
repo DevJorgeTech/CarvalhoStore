@@ -26,6 +26,7 @@ inputSearch.addEventListener("input", function(event) {
 		inputSearch.value = '';
 		enviaSearch(event);
 	} else {
+		formSearch.style.border = "3px solid green";
 		typingTimer = setTimeout(function() {
 			enviaSearch(event);
 		}, doneTypingInterval);
@@ -55,7 +56,7 @@ function enviaSearch(event) {
 
 	// Aqui você constrói a URL com os parâmetros de pesquisa
 	const url = `${formSearch.action}?${params.toString()}`;
-	
+
 	fetch(url, {
 		method: formSearch.getAttribute('method'),
 	}).then(response => response.json())

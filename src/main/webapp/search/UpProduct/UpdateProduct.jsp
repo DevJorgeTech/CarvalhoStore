@@ -35,10 +35,10 @@ ArrayList<Categoria> categorias = (ArrayList<Categoria>) request.getAttribute("c
 						value="${productName}"></td>
 				</tr>
 				<tr>
-					<td><input type="text" name="vp" id="vp" required
+					<td><input type="text" name="preco_venda" id="preco_venda" required
 						minlength="1" pattern="[\d.,]*" onchange="formatarNumero(event)"
 						placeholder="Valor Por Unidade" class="Caixa2"
-						value="${productVp}"></td>
+						value="${productPrecoVenda}"></td>
 				</tr>
 				<tr>
 					<td><input type="text" name="codigo" required minlength="1"
@@ -46,21 +46,29 @@ ArrayList<Categoria> categorias = (ArrayList<Categoria>) request.getAttribute("c
 						value="${productCodigo}"></td>
 				</tr>
 				<tr>
-					<td><select id="category" name="category" required>
+					<td><select id="category" name="category" class="Caixa2" required >
 							<%
 							Categoria category = (Categoria) request.getAttribute("productCategory");
 							%>
-							<option
-								value="<%=String.valueOf(categorias.get(0).getIdCategory())%>"><%=category.getDescricao()%></option>
-							<%
-							for (int i = 0; i < categorias.size(); i++) {
-							%>
-							<option
-								value="<%=String.valueOf(categorias.get(i).getIdCategory())%>"><%=categorias.get(i).getDescricao()%></option>
-							<%
-							}
-							%>
+							<option	value="<%=String.valueOf(categorias.get(0).getIdCategory())%>"><%=category.getDescricao()%></option>
+							<% for (int i = 0; i < categorias.size(); i++) {%>
+							<option value="<%=String.valueOf(categorias.get(i).getIdCategory())%>"><%=categorias.get(i).getDescricao()%></option>
+							<% }%>
 					</select></td>
+				</tr>
+				<tr>
+					<td>
+						<select id="status" name="status" class="Caixa2">
+							<%String status_produto = (String) request.getAttribute("productStatus");%>
+							<%if(status_produto.equalsIgnoreCase("Ativo")){%>
+								<option value="${productStatus}">${productStatus}</option>
+								<option value="Inativo">Inativo</option>
+							<%} else {%>
+								<option value="${productStatus}">${productStatus}</option>
+								<option value="Ativo">Ativo</option>
+							<%}%>
+						</select>
+					</td>
 				</tr>
 			</table>
 
@@ -71,14 +79,12 @@ ArrayList<Categoria> categorias = (ArrayList<Categoria>) request.getAttribute("c
 			</div>
 		</form>
 
-		<button class="Botao2" onclick="voltarMenu(event)">
+		<button class="Botao2" onclick="voltarMenu()">
 			<i class="bi bi-arrow-left">Voltar</i>
 		</button>
 	</div>
 
 	<script src="/CarvalhoStore/search/UpProduct/validacaoUpdate.js"></script>
-
-	<script src="/CarvalhoStore/search/Script_Main/links_internos.js"></script>
 
 </body>
 </html>

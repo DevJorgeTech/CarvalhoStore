@@ -8,6 +8,15 @@
 	box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+
 #form-container {
 	border: 1px, solid red;
 	width: 80%;
@@ -172,6 +181,18 @@ label {
 .Botao1 {
 	text-decoration: none;
 	background-color: #66bbff;
+	padding: 5px 10px 5px 10px;
+	color: #fff;
+	font-size: 1.2em;
+	font-weight: 700;
+	border-radius: 5px;
+	border: 0;
+	cursor: pointer;
+}
+
+.Botao1:disabled {
+	text-decoration: none;
+	background-color: #c0c0c0;
 	padding: 5px 10px 5px 10px;
 	color: #fff;
 	font-size: 1.2em;

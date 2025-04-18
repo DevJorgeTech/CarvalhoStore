@@ -11,8 +11,8 @@ public class PRODUCT_PEDIDO_DAO extends GENERIC_DAO {
 
 	public String insertProductsPedidos(List<ProdutoPedido> listProdutosPedidos) {
 		String sql = "INSERT INTO produtos_pedidos "
-				+ "(Codigo_Pedido,Codigo_Produto,idCategoria,Qnt_Produtos_Caixa,Valor_Caixa)" + "VALUES"
-				+ "(?,?,?,?,?)";
+				+ "(Codigo_Pedido,Codigo_Produto,Qnt_Produtos_Caixa,Valor_Caixa)" + "VALUES"
+				+ "(?,?,?,?)";
 
 		Connection con = conectar();
 
@@ -25,9 +25,8 @@ public class PRODUCT_PEDIDO_DAO extends GENERIC_DAO {
 			for (ProdutoPedido produtoPedido : listProdutosPedidos) {
 				pst.setString(1, produtoPedido.getCodigo_pedido());
 				pst.setString(2, produtoPedido.getCodigo_produto());
-				pst.setInt(3, produtoPedido.getIdCategoria());
-				pst.setInt(4, produtoPedido.getQntProdutosCaixa());
-				pst.setDouble(5, produtoPedido.getValorCaixa());
+				pst.setInt(3, produtoPedido.getQntProdutosCaixa());
+				pst.setDouble(4, produtoPedido.getValorCaixa());
 				
 				pst.addBatch();
 			}
